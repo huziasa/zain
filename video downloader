@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h2>TikTok Video Downloader</h2>
+    <input type="text" id="video_url" placeholder="Enter TikTok Video URL">
+    <button onclick="downloadVideo()">Download</button>
+    <p id="message"></p>
+
+    <script>
+        function downloadVideo() {
+            const url = document.getElementById("video_url").value;
+            if (!url) {
+                alert("Please enter a TikTok video URL.");
+                return;
+            }
+
+            fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.download_url;
+                } else {
+                    document.getElementById("message").innerText = "Error: " + data.message;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
